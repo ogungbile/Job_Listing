@@ -34,4 +34,33 @@ def postJobs(request):
 
 @login_required
 def candidate_view(request, pk):
-    return render(request,'hr/candidate.html')
+    if JobPost.objects.filter(id=pk).exists():
+        job = JobPost.objects.get(id=pk)
+        application = CandidateApplications.objects.filter(job=job)
+        selectedapplication = SelectCandidateJob.objects.filter(job=job)
+        return render(request, 'hr/candidate.html', {'application':application, 'selectedapplication': selectedapplication, 'jobpost': job})
+    return redirect('hrdash')
+
+@login_required
+def selectCandidate(request):
+    if request.method == 'POST':
+        candidateid = request.POST.get('candidateid')
+        jobpostid = request.POST.get('jobpostid')
+        job = JobPost.objects.get(id=jobpostid)
+        candidate = CandidateApplications.objects.get(id=candidateid)
+        SelectCandidateJob(job=job, candidate=candidate).save()
+        return redirect('hrdash')
+    return redirect('hrdash')
+
+
+@login_required
+def deleteCandidate(request):
+    if request.method == 'POST':
+        candidateid = request.POST.get('candidateid')
+        jobpostid = request.POST.get('jobpostid')
+        job = JobPost.objects.get(id=jobpostid)
+        CandidateApplications.objects.get(id=candidateid).delete()
+        job.applyCount = job.applyCount - 1
+        job.save()
+
+    return redirect('hrdash')

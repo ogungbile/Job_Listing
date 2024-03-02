@@ -5,8 +5,8 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 class MyApplyJobList(models.Model):
-    user = models.OneToOneField(to=User,on_delete=models.CASCADE)
-    job = models.ForeignKey(to=CandidateApplications,on_delete=models.CASCADE)
+    user = models.ForeignKey(to=User,on_delete=models.CASCADE)
+    job = models.OneToOneField(to=CandidateApplications,on_delete=models.CASCADE)
     dateYouApply = models.DateTimeField(auto_now_add=True)
 
 

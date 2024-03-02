@@ -224,7 +224,7 @@
         {% include 'hr/navbar.html' %}
         <div class="content">
             <h2>Candidates Details</h2>
-           {# {% if jobapplys %} #}
+            {% if application %} 
             <table class="candidates-table">
                 <thead>
                     <tr>
@@ -239,24 +239,34 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for candi in jobapplys %}
+                    {% for candi in application %}
                     <tr>
                         <td>{{candi.user.username}}</td>
                         <td>{{candi.user.email}}</td>
                         <td>{{candi.passingYear}}</td>
                         <td>{{candi.yearOfExperience}}</td>
+
+                        {% if candi.resume %}
+
                         <td><a href="{{candi.resume.url}}" class="resume-download">Download Resume</a></td>
+                        {% else %}
+                        No resume available
+                    {% endif %}
                         <td>Pending</td>
                         <td>
-                            <form action="{% url 'acceptapplication' %}" method="post">
+                            <form action="{% url 'selectcandidate' %}" method="post">
                                 {% csrf_token %}
+                                
                                 <input type="number" name="candidateid" value="{{candi.id}}" hidden>
                                 <input type="number" name="jobpostid" value="{{jobpost.id}}" hidden>
+                                
                                 <button class="accept-button" type="submit">Accept</button>
                             </form>
                             <hr>
-                            <form action="" method="post">
+                            <form action="{% url 'deletecand' %}" method="post">
                                 {% csrf_token %}
+                                <input type="number" name="candidateid" value="{{candi.id}}" hidden>
+                                <input type="number" name="jobpostid" value="{{jobpost.id}}" hidden>
                                 <button class="reject-button">Reject</button>
                             </form>
                             
@@ -267,12 +277,12 @@
                     <!-- Add more rows for other candidates -->
                 </tbody>
             </table>
-           {# {% else %} #}
+           {% else %} 
                 <h2>No Application received</h2>
-            {# {% endif %} #}
+            {% endif %} 
              
                 <h2>Selected Candidates Details</h2>
-                {% if jobapplys %}
+                {% if selectedapplication %}
                 <table class="candidates-table">
                     <thead>
                         <tr>
@@ -285,7 +295,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for candi in selectedCandidate %}
+                        {% for candi in selectedapplication %}
                         <tr>
                             <td>{{candi.candidate.user.username}}</td>
                             <td>{{candi.candidate.user.email}}</td>

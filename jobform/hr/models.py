@@ -31,8 +31,8 @@ class CandidateApplications(models.Model):
     job = models.OneToOneField(to=JobPost,on_delete=models.CASCADE)
     passingYear = models.IntegerField()
     yearOfExperience = models.IntegerField(default=0)
-    resume = models.FileField(upload_to='resume')
-    status = models.CharField(choices=STATUS_CHOICE,max_length=20,default='pandding')
+    resume = models.FileField(upload_to='resume/')
+    status = models.CharField(choices=STATUS_CHOICE,max_length=20,default='pending')
 
     def __str__(self):
         return str(self.user.username)+" "+str(self.job.title)

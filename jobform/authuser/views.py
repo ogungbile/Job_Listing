@@ -52,7 +52,7 @@ def login_user(request):
         if user is not None:
             login(request, user)
             if Hr.objects.filter(user=user).exists():
-                return redirect('candidate_dashboard')
+                return redirect('hrdash')
             else:
                 return redirect('candidate_dashboard')
         else:

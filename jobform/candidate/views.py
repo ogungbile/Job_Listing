@@ -18,10 +18,8 @@ def myJobListviews(request):
     
 @login_required
 def applyforjob(request,pk):
-    if Hr.objects.filter(user=request.user).exists():
-        return redirect('hrdash')
     if JobPost.objects.filter(id=pk).exists():
-        job= JobPost.objects.get(id=pk)
+        job = JobPost.objects.get(id=pk)
         if CandidateApplications.objects.filter(user=request.user,job=job).exists():
             return redirect('candidate_dashboard')
         if request.method == 'POST':
@@ -31,9 +29,12 @@ def applyforjob(request,pk):
             passing_year = request.POST.get('passing_year')
             yearOfExperience = request.POST.get('yearOfExperience')
             resume = request.FILES.get('resume')
-            
+            #job = JobPost.objects.get(id=pk)
             candidate_application = CandidateApplications(user=request.user,job=job,passingYear=passing_year,yearOfExperience=yearOfExperience,resume=resume)
             candidate_application.save()
             MyApplyJobList(user=request.user, job=candidate_application).save()
+            job.applyCount += 1
+            job.save()
             return redirect('candidate_dashboard')
-    return render(request,'candidate/apply.html')
+        return render(request,'candidate/apply.html')
+    return redirect('candidate_dashboard')
